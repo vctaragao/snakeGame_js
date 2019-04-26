@@ -1,2 +1,2 @@
 # snakeGame_js
-Learning Javascript by building an Snake game
+Learning Javascript by building a Snake game
