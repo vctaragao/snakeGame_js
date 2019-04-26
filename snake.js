@@ -20,7 +20,7 @@ class Snake {
     this.positionY = canvasHeight / 2;
     this.body = [4];
     this.speed = this.width;
-    this.way = 'h';
+    this.way = 'x';
     this.ctx = canvas.getContext("2d");
 
   }
@@ -39,7 +39,13 @@ class Snake {
         this.body[i] = this.positionX + (i + 8);
       }
     } else {
+      // Its getting the arrow
+      document.onkeydown = logKey;
+      function logKey(e) {
+        console.log(e.code);
+      }
 
+      // To do: Handle the arrwo pressed
     }
     this.draw();
   };
