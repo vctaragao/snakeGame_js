@@ -20,39 +20,81 @@ class Snake {
     this.positionY = canvasHeight / 2;
     this.body = [4];
     this.speed = this.width;
-    this.way = 'x';
+    this.direction = "right";
     this.ctx = canvas.getContext("2d");
-
+    document.addEventListener("keydown", (e) => {
+      this.changeDirection(e.key);
+    });
   }
   init() {
     for (let i = 0; i < 4; i++) {
-      this.body[i] = this.positionX + (i + 8);
+      this.body[i] = { "x": this.positionX + (i * this.width), "y": this.positionY + this.height, "height": this.height, "width": this.width };
     }
     this.ctx.fillStyle = "#FF0000";
     this.ctx.strokeStyle = "#000000";
     this.draw();
   };
+  changeDirection(key) {
+    switch (key) {
+      case "ArrowRight":
+        if (this.direction !== 'left')
+          this.direction = 'right';
+        break;
+      case "ArrowLeft":
+        if (this.direction !== 'right')
+          this.direction = 'left';
+        break;
+      case "ArrowUp":
+        if (this.direction !== 'down')
+          this.direction = 'up';
+        break;
+      case "ArrowDown":
+        if (this.direction !== 'up')
+          this.direction = 'down';
+        break;
+    }
+
+  };
   updateSnake() {
-    if (this.way === 'h') {
+    if (this.direction === 'right') {
+      this.speed = this.width;
+      this.positionX += this.speed;
+      this.body = this.body.map((e, i) => {
+        e.x = this.positionX + (i * this.width);
+        return e
+      });
+    } else if (this.direction === 'left') {
+      this.speed = this.width * -1;
       this.positionX += this.speed;
       for (let i = 3; i >= 0; i--) {
         this.body[i] = this.positionX + (i + 8);
       }
-    } else {
-      // Its getting the arrow
-      document.onkeydown = logKey;
-      function logKey(e) {
-        console.log(e.code);
-      }
-
       // To do: Handle the arrwo pressed
+    } else if (this.direction === 'up') {
+      this.speed = this.height * -1;
+      this.positionY += this.speed;
+      for (let i = 3; i >= 0; i--) {
+        this.body[i] = this.positionY + (i + 8);
+      }
+    } else if (this.direction === 'down') {
+      this.speed = this.height;
+      this.positionY += this.speed;
+
+      let head = this.body[this.body.lenght - 1];
+      head.y = this.positiony + ((this.body.lenght - 1) * this.height);
+
+
+      this.body = this.body.map((e, i) => {
+        e.y = this.positiony + (i * this.height);
+        return e;
+      });
     }
     this.draw();
   };
   draw() {
     this.body.forEach(function (e, i) {
-      this.ctx.strokeRect(this.positionX + (i * this.width), this.positionY, this.width, this.height);
-      this.ctx.fillRect(this.positionX + (i * this.width), this.positionY, this.width, this.height);
+      this.ctx.strokeRect(e.x, e.y, e.width, e.height);
+      this.ctx.fillRect(e.x, e.y, e.width, e.height);
     }, this);
   }
 }
