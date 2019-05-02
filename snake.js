@@ -20,34 +20,88 @@ class Snake {
     this.positionY = canvasHeight / 2;
     this.body = [4];
     this.speed = this.width;
-    this.way = 'h';
+    this.direction = "right";
     this.ctx = canvas.getContext("2d");
-
+    document.addEventListener("keydown", (e) => {
+      this.changeDirection(e.key);
+    });
   }
   init() {
     for (let i = 0; i < 4; i++) {
-      this.body[i] = this.positionX + (i + 8);
+      this.body[i] = new SnakeBodyParts(this.positionX + (i * this.width), this.positionY + this.height, this.height, this.width);
     }
+
+    this.positionX = this.body[this.body.length - 1].x;
+    this.positionY = this.body[this.body.length - 1].y;
+
     this.ctx.fillStyle = "#FF0000";
     this.ctx.strokeStyle = "#000000";
     this.draw();
   };
-  updateSnake() {
-    if (this.way === 'h') {
-      this.positionX += this.speed;
-      for (let i = 3; i >= 0; i--) {
-        this.body[i] = this.positionX + (i + 8);
-      }
-    } else {
+  changeDirection(key) {
+    switch (key) {
+      case "ArrowRight":
+        if (this.direction !== 'left')
+          this.direction = 'right';
+        break;
+      case "ArrowLeft":
+        if (this.direction !== 'right')
+          this.direction = 'left';
+        break;
+      case "ArrowUp":
+        if (this.direction !== 'down')
+          this.direction = 'up';
+        break;
+      case "ArrowDown":
+        if (this.direction !== 'up')
+          this.direction = 'down';
+        break;
+    }
 
+  };
+  updateSnake() {
+    let new_head = new SnakeBodyParts(this.body[this.body.length - 1].x, this.body[this.body.length - 1].y, this.body[this.body.length - 1].width, this.body[this.body.length - 1].height);
+    this.body.shift();
+    if (this.direction === 'right') {
+      this.speed = this.width;
+      this.positionX += this.speed;
+      new_head.x = this.positionX;
+      this.body.push(new_head);
+    } else if (this.direction === 'left') {
+      this.speed = this.width * -1;
+      this.positionX += this.speed;
+      new_head.x = this.positionX;
+      this.body.push(new_head);
+    } else if (this.direction === 'up') {
+      this.speed = this.height * -1;
+      this.positionY += this.speed;
+      new_head.y = this.positionY;
+      this.body.push(new_head);
+    } else if (this.direction === 'down') {
+      this.speed = this.height;
+      this.positionY += this.speed;
+      new_head.y = this.positionY;
+      this.body.push(new_head);
     }
     this.draw();
   };
   draw() {
     this.body.forEach(function (e, i) {
-      this.ctx.strokeRect(this.positionX + (i * this.width), this.positionY, this.width, this.height);
-      this.ctx.fillRect(this.positionX + (i * this.width), this.positionY, this.width, this.height);
+      this.ctx.strokeRect(e.x, e.y, e.width, e.height);
+      this.ctx.fillRect(e.x, e.y, e.width, e.height);
     }, this);
+  };
+  debug() {
+    this.body.forEach(e => console.log(e));
+  }
+}
+
+class SnakeBodyParts {
+  constructor(x, y, width, height) {
+    this.x = x;
+    this.y = y;
+    this.width = width;
+    this.height = height;
   }
 }
 
@@ -55,7 +109,6 @@ function updateGame(snake, snakeGame) {
   setInterval(function () {
     snakeGame.clear();
     snake.updateSnake();
-    snake.body.forEach(e => console.log(e));
     console.log("Runned");
   }, 500);
 }
@@ -65,6 +118,5 @@ function startGame() {
   snakeGame.init(snake);
   updateGame(snake, snakeGame);
 }
-
 
 
