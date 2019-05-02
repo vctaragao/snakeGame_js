@@ -18,7 +18,7 @@ class Snake {
     this.height = 8;
     this.positionX = canvasWidth / 2;
     this.positionY = canvasHeight / 2;
-    this.body = [4];
+    this.body = [10];
     this.speed = this.width;
     this.direction = "right";
     this.ctx = canvas.getContext("2d");
@@ -27,7 +27,7 @@ class Snake {
     });
   }
   init() {
-    for (let i = 0; i < 4; i++) {
+    for (let i = 0; i < 10; i++) {
       this.body[i] = new SnakeBodyParts(this.positionX + (i * this.width), this.positionY + this.height, this.height, this.width);
     }
 
@@ -55,6 +55,9 @@ class Snake {
       case "ArrowDown":
         if (this.direction !== 'up')
           this.direction = 'down';
+        break;
+      default:
+        clearInterval(run);
         break;
     }
 
@@ -86,11 +89,27 @@ class Snake {
     this.draw();
   };
   draw() {
+
+    if (this.checkSelfColision())
+      clearInterval(run);
+
     this.body.forEach(function (e, i) {
       this.ctx.strokeRect(e.x, e.y, e.width, e.height);
       this.ctx.fillRect(e.x, e.y, e.width, e.height);
     }, this);
   };
+  checkSelfColision() {
+    let head = this.body[this.body.length - 1];
+    let tail = this.body.slice(0, this.body.length - 1);
+    let colided = false;
+    for (let i = 0; i < tail.length; i++) {
+      if (JSON.stringify(head) === JSON.stringify(tail[i])) {
+        colided = true;
+        break;
+      }
+    }
+    return colided;
+  }
   debug() {
     this.body.forEach(e => console.log(e));
   }
@@ -105,18 +124,17 @@ class SnakeBodyParts {
   }
 }
 
-function updateGame(snake, snakeGame) {
-  setInterval(function () {
-    snakeGame.clear();
-    snake.updateSnake();
-    console.log("Runned");
-  }, 500);
-}
+let snake = new Snake(snakeGame.canvas.width, snakeGame.canvas.height);
 
 function startGame() {
-  let snake = new Snake(snakeGame.canvas.width, snakeGame.canvas.height);
   snakeGame.init(snake);
-  updateGame(snake, snakeGame);
 }
+
+
+var run = setInterval(function () {
+  snakeGame.clear();
+  snake.updateSnake();
+  console.log("Runned");
+}, 100);
 
 
