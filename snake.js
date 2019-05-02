@@ -90,7 +90,7 @@ class Snake {
   };
   draw() {
 
-    if (this.checkSelfColision())
+    if (this.checkSelfColision() || this.checkBorderColision())
       clearInterval(run);
 
     this.body.forEach(function (e, i) {
@@ -109,7 +109,11 @@ class Snake {
       }
     }
     return colided;
-  }
+  };
+  checkBorderColision() {
+    let head = this.body[this.body.length - 1];
+    return (head.x >= canvas.width || head.x <= 0 || head.y >= canvas.height || head.y <= 0) ? true : false;
+  };
   debug() {
     this.body.forEach(e => console.log(e));
   }
@@ -129,7 +133,6 @@ let snake = new Snake(snakeGame.canvas.width, snakeGame.canvas.height);
 function startGame() {
   snakeGame.init(snake);
 }
-
 
 var run = setInterval(function () {
   snakeGame.clear();
