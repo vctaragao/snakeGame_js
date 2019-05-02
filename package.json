@@ -1,0 +1,25 @@
+{
+  "name": "snakegame_js",
+  "version": "1.0.0",
+  "description": "Learning Javascript by building a Snake game",
+  "main": "snakeGame.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vctaragao/snakeGame_js.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/vctaragao/snakeGame_js/issues"
+  },
+  "homepage": "https://github.com/vctaragao/snakeGame_js#readme",
+  "devDependencies": {
+    "express": "^4.16.4",
+    "gulp": "^4.0.1",
+    "gulp-concat": "^2.6.1",
+    "gulp-util": "^3.0.8"
+  }
+}
