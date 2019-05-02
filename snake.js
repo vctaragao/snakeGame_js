@@ -28,8 +28,12 @@ class Snake {
   }
   init() {
     for (let i = 0; i < 4; i++) {
-      this.body[i] = { "x": this.positionX + (i * this.width), "y": this.positionY + this.height, "height": this.height, "width": this.width };
+      this.body[i] = new SnakeBodyParts(this.positionX + (i * this.width), this.positionY + this.height, this.height, this.width);
     }
+
+    this.positionX = this.body[this.body.length - 1].x;
+    this.positionY = this.body[this.body.length - 1].y;
+
     this.ctx.fillStyle = "#FF0000";
     this.ctx.strokeStyle = "#000000";
     this.draw();
@@ -56,38 +60,28 @@ class Snake {
 
   };
   updateSnake() {
+    let new_head = new SnakeBodyParts(this.body[this.body.length - 1].x, this.body[this.body.length - 1].y, this.body[this.body.length - 1].width, this.body[this.body.length - 1].height);
+    this.body.shift();
     if (this.direction === 'right') {
       this.speed = this.width;
       this.positionX += this.speed;
-      this.body = this.body.map((e, i) => {
-        e.x = this.positionX + (i * this.width);
-        return e
-      });
+      new_head.x = this.positionX;
+      this.body.push(new_head);
     } else if (this.direction === 'left') {
       this.speed = this.width * -1;
       this.positionX += this.speed;
-      for (let i = 3; i >= 0; i--) {
-        this.body[i] = this.positionX + (i + 8);
-      }
-      // To do: Handle the arrwo pressed
+      new_head.x = this.positionX;
+      this.body.push(new_head);
     } else if (this.direction === 'up') {
       this.speed = this.height * -1;
       this.positionY += this.speed;
-      for (let i = 3; i >= 0; i--) {
-        this.body[i] = this.positionY + (i + 8);
-      }
+      new_head.y = this.positionY;
+      this.body.push(new_head);
     } else if (this.direction === 'down') {
       this.speed = this.height;
       this.positionY += this.speed;
-
-      let head = this.body[this.body.lenght - 1];
-      head.y = this.positiony + ((this.body.lenght - 1) * this.height);
-
-
-      this.body = this.body.map((e, i) => {
-        e.y = this.positiony + (i * this.height);
-        return e;
-      });
+      new_head.y = this.positionY;
+      this.body.push(new_head);
     }
     this.draw();
   };
@@ -96,6 +90,18 @@ class Snake {
       this.ctx.strokeRect(e.x, e.y, e.width, e.height);
       this.ctx.fillRect(e.x, e.y, e.width, e.height);
     }, this);
+  };
+  debug() {
+    this.body.forEach(e => console.log(e));
+  }
+}
+
+class SnakeBodyParts {
+  constructor(x, y, width, height) {
+    this.x = x;
+    this.y = y;
+    this.width = width;
+    this.height = height;
   }
 }
 
@@ -103,7 +109,6 @@ function updateGame(snake, snakeGame) {
   setInterval(function () {
     snakeGame.clear();
     snake.updateSnake();
-    snake.body.forEach(e => console.log(e));
     console.log("Runned");
   }, 500);
 }
@@ -113,6 +118,5 @@ function startGame() {
   snakeGame.init(snake);
   updateGame(snake, snakeGame);
 }
-
 
 
