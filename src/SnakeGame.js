@@ -1,5 +1,3 @@
-console.log('lida');
-
 let snakeGame = {
   canvas: document.getElementById("canvas"),
   init: function (snake) {
@@ -16,7 +14,7 @@ let snakeGame = {
 
 let snake = new Snake(snakeGame.canvas.width, snakeGame.canvas.height);
 
-function startGame() {
+var startGame = function () {
   snakeGame.init(snake);
 }
 

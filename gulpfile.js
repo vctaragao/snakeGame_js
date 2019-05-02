@@ -23,6 +23,9 @@ gulp.task('serve', function () {
   app.get('/', function (req, res) {
     res.sendFile(path.join(__dirname + '/dist/index.html'));
   });
+  app.get('/js/app.js', (req, res) => {
+    res.sendFile(path.join(__dirname + '/dist/js/app.js'));
+  })
 
   app.listen(3000, function () {
     gutil.log("Server started on '" + gutil.colors.green('http://localhost:3000') + "'");
