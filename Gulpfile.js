@@ -32,7 +32,7 @@ function serve(cb) {
 }
 
 function watch(cb) {
-  gulp.watch('src/*.js', scripts);
+  gulp.watch('src/js/*.js', scripts);
   gulp.watch('src/index.html', copyHtml);
   cb();
 }
