@@ -4,20 +4,17 @@ const express = require('express');
 const path = require('path');
 const gutil = require('gulp-util');
 
-gulp.task('scripts', function () {
-  gulp.src('src/*.js').pipe(concat('app.js')).pipe(gulp.dest('dist/js'))
-});
+function scripts(cb) {
+  gulp.src('src/js/*.js').pipe(concat('app.js')).pipe(gulp.dest('dist/js'));
+  cb();
+}
 
-gulp.task('copyHtml', function () {
+function copyHtml(cb) {
   gulp.src('src/*.html').pipe(gulp.dest('dist'));
-});
+  cb();
+}
 
-gulp.task('watch', function () {
-  gulp.watch('src/*.js', gulp.series('scripts'));
-  gulp.watch('src/index.html', gulp.series('copyHtml'));
-});
-
-gulp.task('serve', function () {
+function serve(cb) {
   var app = express();
 
   app.get('/', function (req, res) {
@@ -30,4 +27,15 @@ gulp.task('serve', function () {
   app.listen(3000, function () {
     gutil.log("Server started on '" + gutil.colors.green('http://localhost:3000') + "'");
   });
-});
+
+  cb();
+}
+
+function watch(cb) {
+  gulp.watch('src/*.js', scripts);
+  gulp.watch('src/index.html', copyHtml);
+  cb();
+}
+
+module.exports.serve = gulp.parallel(serve, watch);
+module.exports.build = gulp.series(scripts, copyHtml);
