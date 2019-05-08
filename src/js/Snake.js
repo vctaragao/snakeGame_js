@@ -1,10 +1,10 @@
 class Snake {
   constructor(canvasWidth, canvasHeight) {
-    this.width = 7;
-    this.height = 7;
-    this.positionX = 1 + Math.floor((Math.random() * canvasWidth) / 8);
-    this.positionY = 1 + Math.floor((Math.random() * canvasHeight) / 8);
-    this.body = [10];
+    this.width = 8;
+    this.height = 8;
+    this.positionX = Math.floor(Math.floor(Math.random() * (canvasWidth - (this.width * 10))) / 8) * 8;
+    this.positionY = Math.floor(Math.floor(Math.random() * (canvasHeight - (this.height * 10))) / 8) * 8;
+    this.body = [6];
     this.speed = this.width;
     this.direction = "right";
     document.addEventListener("keydown", (e) => {
@@ -60,12 +60,10 @@ class Snake {
     this.body.push(new_head);
   };
   draw(ctx) {
-
     if (this.checkSelfColision() || this.checkBorderColision())
       clearInterval(run);
 
     this.body.forEach(function (e) {
-      ctx.strokeRect(e.x, e.y, e.width, e.height);
       ctx.fillRect(e.x, e.y, e.width, e.height);
     }, this);
   };
@@ -83,7 +81,7 @@ class Snake {
   };
   checkBorderColision() {
     let head = this.body[this.body.length - 1];
-    return (head.x >= canvas.width || head.x <= 0 || head.y >= canvas.height || head.y <= 0) ? true : false;
+    return (head.x > canvas.width || head.x < 0 || head.y > canvas.height || head.y < 0) ? true : false;
   };
   getDirection() {
     return this.direction;

@@ -25,7 +25,7 @@ class SnakeGame {
     } else {
       new_head.y += snake.getSpeed();
     }
-    eat = checkIfEat(new_head, food, this);
+    eat = checkIfEat(new_head, food, this, this.ctx);
     snake.updateSnake(new_head, eat);
   };
 
